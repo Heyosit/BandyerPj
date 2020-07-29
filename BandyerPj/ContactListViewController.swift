@@ -44,13 +44,7 @@ final class ContactListViewController: UIViewController {
     private func setupLayout() {
         view.addSubview(contactListTableView)
         
-        NSLayoutConstraint.activate([
-            
-            contactListTableView.topAnchor.constraint(equalTo: view.topAnchor),
-            contactListTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            contactListTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            contactListTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-        ])
+        contactListTableView.anchor(to: self.view)
     }
     
     override func viewDidLoad() {
@@ -86,6 +80,11 @@ extension ContactListViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let callRoomViewController = CallRoomViewController()
+        callRoomViewController.modalPresentationStyle = .fullScreen
+        callRoomViewController.contact = contactListMock[indexPath.row]
+        tableView.deselectRow(at: indexPath, animated: true)
+        self.show(callRoomViewController, sender: nil)
         
     }
     

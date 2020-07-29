@@ -58,12 +58,9 @@ final class ContactInfoTableViewCell: UITableViewCell {
         
         self.addSubview(containerView)
         
+        containerView.anchor(to: self)
+        
         NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: topAnchor),
-            containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            
             nameLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: ContactInfoTableViewCell.topBottomLabelSpacing),
             nameLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: ContactInfoTableViewCell.leadingLabelSpacing),
             nameLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),

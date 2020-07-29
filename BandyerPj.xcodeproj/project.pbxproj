@@ -17,6 +17,9 @@
 		151427D324CF369A0055BCD7 /* BandyerPjUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151427D224CF369A0055BCD7 /* BandyerPjUITests.swift */; };
 		151427E224D00D930055BCD7 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151427E124D00D930055BCD7 /* Contact.swift */; };
 		151427E424D014250055BCD7 /* ContactInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151427E324D014250055BCD7 /* ContactInfoTableViewCell.swift */; };
+		1535F8CB24D16601008B0815 /* CallRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1535F8CA24D16601008B0815 /* CallRoomViewController.swift */; };
+		1535F8CE24D1B167008B0815 /* CameraPreviewLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1535F8CD24D1B167008B0815 /* CameraPreviewLayerView.swift */; };
+		1535F8D024D1B3CF008B0815 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1535F8CF24D1B3CF008B0815 /* UIViewExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +56,9 @@
 		151427D424CF369A0055BCD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		151427E124D00D930055BCD7 /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		151427E324D014250055BCD7 /* ContactInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactInfoTableViewCell.swift; sourceTree = "<group>"; };
+		1535F8CA24D16601008B0815 /* CallRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallRoomViewController.swift; sourceTree = "<group>"; };
+		1535F8CD24D1B167008B0815 /* CameraPreviewLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewLayerView.swift; sourceTree = "<group>"; };
+		1535F8CF24D1B3CF008B0815 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,11 +110,11 @@
 			isa = PBXGroup;
 			children = (
 				151427B024CF36970055BCD7 /* AppDelegate.swift */,
-				151427E124D00D930055BCD7 /* Contact.swift */,
-				1538DA1124D0818C005EB495 /* Model */,
 				151427B224CF36970055BCD7 /* SceneDelegate.swift */,
+				1538DA1124D0818C005EB495 /* Model */,
 				1538DA1224D0819A005EB495 /* UI */,
 				151427B424CF36970055BCD7 /* ContactListViewController.swift */,
+				1535F8CA24D16601008B0815 /* CallRoomViewController.swift */,
 				151427B624CF36970055BCD7 /* Main.storyboard */,
 				151427B924CF36990055BCD7 /* Assets.xcassets */,
 				151427BB24CF36990055BCD7 /* LaunchScreen.storyboard */,
@@ -135,9 +141,26 @@
 			path = BandyerPjUITests;
 			sourceTree = "<group>";
 		};
+		1535F8D124D1B8D2008B0815 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				1535F8CF24D1B3CF008B0815 /* UIViewExtension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		1535F8D224D1B8E9008B0815 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1535F8CD24D1B167008B0815 /* CameraPreviewLayerView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		1538DA1124D0818C005EB495 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				151427E124D00D930055BCD7 /* Contact.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -145,6 +168,8 @@
 		1538DA1224D0819A005EB495 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				1535F8D224D1B8E9008B0815 /* View */,
+				1535F8D124D1B8D2008B0815 /* Extension */,
 				1538DA1324D0819F005EB495 /* TableViewCell */,
 			);
 			path = UI;
@@ -290,9 +315,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				151427E224D00D930055BCD7 /* Contact.swift in Sources */,
+				1535F8CE24D1B167008B0815 /* CameraPreviewLayerView.swift in Sources */,
 				151427E424D014250055BCD7 /* ContactInfoTableViewCell.swift in Sources */,
 				151427B524CF36970055BCD7 /* ContactListViewController.swift in Sources */,
+				1535F8CB24D16601008B0815 /* CallRoomViewController.swift in Sources */,
 				151427B124CF36970055BCD7 /* AppDelegate.swift in Sources */,
+				1535F8D024D1B3CF008B0815 /* UIViewExtension.swift in Sources */,
 				151427B324CF36970055BCD7 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
