@@ -19,14 +19,14 @@ final class CallRoomViewController: UIViewController {
         return view
     }()
     
-    private lazy var blurredView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = true
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+    private lazy var blurView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+        let view = UIVisualEffectView(effect: blurEffect)
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    // MARK: Data
+// MARK: Data
     
     private enum CameraAuthorizationStatus {
         case authorized
@@ -49,7 +49,7 @@ final class CallRoomViewController: UIViewController {
     
     @objc dynamic var videoDeviceInput: AVCaptureDeviceInput!
     
-    private var cameraAuthStatus: CameraAuthorizationStatus = .notAuthorized
+    private var cameraAuthStatus: CameraAuthorizationStatus = .notAuthorized { didSet { didUpdateCameraAuthStatus() } }
     
     private let captureSessionQueue = DispatchQueue(label: "captureSessionQueue")
     private var cameras: [AVCaptureDevice]?
@@ -63,9 +63,10 @@ final class CallRoomViewController: UIViewController {
     
     private func setupLayout() {
         view.addSubview(cameraPreviewLayerView)
-        //        view.addSubview(blurredView)
-        //        blurredView.anchor(to: self.view)
+        view.addSubview(blurView)
+        
         cameraPreviewLayerView.anchor(to: self.view)
+        blurView.anchor(to: cameraPreviewLayerView)
     }
     
     override func viewDidLoad() {
@@ -74,7 +75,7 @@ final class CallRoomViewController: UIViewController {
     }
     
     private func setup() {
-        view.backgroundColor = .blue
+        view.backgroundColor = .black
         setupCameraPreviewLayerView()
     }
     
@@ -167,6 +168,16 @@ final class CallRoomViewController: UIViewController {
                 #warning("Todo")
                 
             }
+        }
+    }
+    
+    
+    private func didUpdateCameraAuthStatus() {
+        switch cameraAuthStatus {
+        case .authorized:
+            blurView.isHidden = true
+        default:
+            blurView.isHidden = false
         }
     }
 }

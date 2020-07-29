@@ -20,6 +20,7 @@
 		1535F8CB24D16601008B0815 /* CallRoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1535F8CA24D16601008B0815 /* CallRoomViewController.swift */; };
 		1535F8CE24D1B167008B0815 /* CameraPreviewLayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1535F8CD24D1B167008B0815 /* CameraPreviewLayerView.swift */; };
 		1535F8D024D1B3CF008B0815 /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1535F8CF24D1B3CF008B0815 /* UIViewExtension.swift */; };
+		1535F8D424D1E74A008B0815 /* BlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1535F8D324D1E74A008B0815 /* BlurView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		1535F8CA24D16601008B0815 /* CallRoomViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallRoomViewController.swift; sourceTree = "<group>"; };
 		1535F8CD24D1B167008B0815 /* CameraPreviewLayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewLayerView.swift; sourceTree = "<group>"; };
 		1535F8CF24D1B3CF008B0815 /* UIViewExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		1535F8D324D1E74A008B0815 /* BlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlurView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				1535F8CD24D1B167008B0815 /* CameraPreviewLayerView.swift */,
+				1535F8D324D1E74A008B0815 /* BlurView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -319,6 +322,7 @@
 				151427E424D014250055BCD7 /* ContactInfoTableViewCell.swift in Sources */,
 				151427B524CF36970055BCD7 /* ContactListViewController.swift in Sources */,
 				1535F8CB24D16601008B0815 /* CallRoomViewController.swift in Sources */,
+				1535F8D424D1E74A008B0815 /* BlurView.swift in Sources */,
 				151427B124CF36970055BCD7 /* AppDelegate.swift in Sources */,
 				1535F8D024D1B3CF008B0815 /* UIViewExtension.swift in Sources */,
 				151427B324CF36970055BCD7 /* SceneDelegate.swift in Sources */,
