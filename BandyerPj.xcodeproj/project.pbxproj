@@ -92,6 +92,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1511C1A424D2E2A20060564E /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				151427B424CF36970055BCD7 /* ContactListViewController.swift */,
+				1535F8CA24D16601008B0815 /* CallRoomViewController.swift */,
+				1511C1A024D2B8580060564E /* BottomSheetViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
 		151427A424CF36970055BCD7 = {
 			isa = PBXGroup;
 			children = (
@@ -119,9 +129,6 @@
 				151427B224CF36970055BCD7 /* SceneDelegate.swift */,
 				1538DA1124D0818C005EB495 /* Model */,
 				1538DA1224D0819A005EB495 /* UI */,
-				151427B424CF36970055BCD7 /* ContactListViewController.swift */,
-				1535F8CA24D16601008B0815 /* CallRoomViewController.swift */,
-				1511C1A024D2B8580060564E /* BottomSheetViewController.swift */,
 				151427B624CF36970055BCD7 /* Main.storyboard */,
 				151427B924CF36990055BCD7 /* Assets.xcassets */,
 				151427BB24CF36990055BCD7 /* LaunchScreen.storyboard */,
@@ -177,6 +184,7 @@
 		1538DA1224D0819A005EB495 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				1511C1A424D2E2A20060564E /* ViewController */,
 				1535F8D224D1B8E9008B0815 /* View */,
 				1535F8D124D1B8D2008B0815 /* Extension */,
 				1538DA1324D0819F005EB495 /* TableViewCell */,

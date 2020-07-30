@@ -10,19 +10,20 @@ import UIKit
 
 final class BottomSheetViewController: UIViewController {
     
-    let maxHeight: CGFloat = (UIScreen.main.bounds.height / 5) * 4
     var minHeight: CGFloat {
         return UIScreen.main.bounds.height - (30 + UIApplication.shared.statusBarFrame.height)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
+        setupProperties()
+        addGesture()
     }
     
-    private func setup() {
+    private func setupProperties() {
         view.backgroundColor = .clear
-        addGesture()
+        view.layer.cornerRadius = BottomSheetViewController.cornerRadius
+        view.layer.masksToBounds = true
     }
     
     private func addGesture() {
@@ -52,7 +53,7 @@ final class BottomSheetViewController: UIViewController {
         UIView.animate(withDuration: 0.3) { [weak self] in
             guard let self = self else { return }
             let frame = self.view.frame
-            let yComponent = self.maxHeight
+            let yComponent = BottomSheetViewController.maxHeight
             self.view.frame = CGRect(x: 0, y: yComponent, width: frame.width, height: frame.height)
         }
     }
@@ -62,22 +63,28 @@ final class BottomSheetViewController: UIViewController {
         let velocity = recognizer.velocity(in: self.view)
         let y = self.view.frame.minY
         
-        if ( y + translation.y >= maxHeight) && (y + translation.y <= minHeight ) {
+        if ( y + translation.y >= BottomSheetViewController.maxHeight) && (y + translation.y <= minHeight ) {
             self.view.frame = CGRect(x: 0, y: y + translation.y, width: view.frame.width, height: view.frame.height)
             recognizer.setTranslation(CGPoint.zero, in: self.view)
         }
         
         if recognizer.state == .ended {
-            var duration =  velocity.y < 0 ? Double((y - maxHeight) / -velocity.y) : Double((minHeight - y) / velocity.y )
+            var duration =  velocity.y < 0 ? Double((y - BottomSheetViewController.maxHeight) / -velocity.y) : Double((minHeight - y) / velocity.y )
             duration = duration > 1.3 ? 1 : duration
             UIView.animate(withDuration: duration, delay: 0.0, options: [.allowUserInteraction], animations: {
                 if  velocity.y >= 0 {
                     self.view.frame = CGRect(x: 0, y: self.minHeight, width: self.view.frame.width, height: self.view.frame.height)
                 } else {
-                    self.view.frame = CGRect(x: 0, y: self.maxHeight, width: self.view.frame.width, height: self.view.frame.height)
+                    self.view.frame = CGRect(x: 0, y: BottomSheetViewController.maxHeight, width: self.view.frame.width, height: self.view.frame.height)
                 }
                 
             }, completion: nil)
         }
     }
+}
+
+extension BottomSheetViewController {
+    
+    static let maxHeight: CGFloat = (UIScreen.main.bounds.height / 5) * 4
+    static let cornerRadius: CGFloat = 12
 }

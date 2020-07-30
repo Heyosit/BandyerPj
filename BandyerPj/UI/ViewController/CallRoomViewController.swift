@@ -26,6 +26,12 @@ final class CallRoomViewController: UIViewController {
         return view
     }()
     
+    private lazy var nameDescriptionLabelView: TitleSubtitleLabelView = {
+       let view = TitleSubtitleLabelView()
+       view.translatesAutoresizingMaskIntoConstraints = false
+       return view
+    }()
+    
     // MARK: Data
     
     private enum CameraAuthorizationStatus {
@@ -64,9 +70,17 @@ final class CallRoomViewController: UIViewController {
     private func setupLayout() {
         view.addSubview(cameraPreviewLayerView)
         view.addSubview(blurView)
+        view.addSubview(nameDescriptionLabelView)
         
         cameraPreviewLayerView.anchor(to: self.view)
         blurView.anchor(to: cameraPreviewLayerView)
+        
+        NSLayoutConstraint.activate([
+            nameDescriptionLabelView.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
+            nameDescriptionLabelView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            view.trailingAnchor.constraint(equalTo: nameDescriptionLabelView.trailingAnchor, constant: 15),
+            
+        ])
     }
     
     // MARK: ViewDidLoad
@@ -78,6 +92,7 @@ final class CallRoomViewController: UIViewController {
     
     private func setup() {
         view.backgroundColor = .black
+        nameDescriptionLabelView.config(title: contact?.name)
         setupCameraPreviewLayerView()
     }
     

@@ -29,7 +29,7 @@ final class ContactListViewController: UIViewController {
         Contact(name: "Aldo", number: "2345634534"),
         Contact(name: "Marco", number: "56467433"),
         Contact(name: "Giovanni", number: "65747345345"),
-        Contact(name: "Gennaro", number: "34534226"),
+        Contact(name: "Devices Bandyer", number: "34534226"),
         Contact(name: "Mariano", number: "7534535"),
         Contact(name: "Paolo", number: "7456456")
     ]

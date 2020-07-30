@@ -16,8 +16,8 @@ final class TitleSubtitleLabelView: UIView {
         label.lineBreakMode = .byTruncatingTail
         label.numberOfLines = 1
         label.textAlignment = .center
-        label.textColor = UIColor.black
-        label.font = UIFont.systemFont(ofSize: 18, weight: .regular)
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 45, weight: .regular)
         return label
     }()
     
@@ -27,8 +27,9 @@ final class TitleSubtitleLabelView: UIView {
         label.lineBreakMode = .byTruncatingTail
         label.numberOfLines = 1
         label.textAlignment = .center
-        label.textColor = UIColor.black
-        label.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 30, weight: .regular)
+        label.text = "FaceTime..."
         return label
     }()
     
@@ -53,7 +54,7 @@ final class TitleSubtitleLabelView: UIView {
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 15),
             subtitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             subtitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             subtitleLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -62,6 +63,14 @@ final class TitleSubtitleLabelView: UIView {
     
     private func setupProperties() {
         self.backgroundColor = .clear
+        
+    }
+    
+    func config(title: String? = nil, subtitle: String? = nil) {
+        titleLabel.text = title ?? ""
+        if let subtitle = subtitle {
+            subtitleLabel.text = subtitle
+        }
     }
     
 }
