@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1511C1A124D2B8580060564E /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1511C1A024D2B8580060564E /* BottomSheetViewController.swift */; };
+		1511C1A324D2D6850060564E /* TitleSubtitleLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1511C1A224D2D6850060564E /* TitleSubtitleLabelView.swift */; };
 		151427B124CF36970055BCD7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151427B024CF36970055BCD7 /* AppDelegate.swift */; };
 		151427B324CF36970055BCD7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151427B224CF36970055BCD7 /* SceneDelegate.swift */; };
 		151427B524CF36970055BCD7 /* ContactListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151427B424CF36970055BCD7 /* ContactListViewController.swift */; };
@@ -41,6 +43,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1511C1A024D2B8580060564E /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
+		1511C1A224D2D6850060564E /* TitleSubtitleLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleSubtitleLabelView.swift; sourceTree = "<group>"; };
 		151427AD24CF36970055BCD7 /* BandyerPj.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BandyerPj.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		151427B024CF36970055BCD7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		151427B224CF36970055BCD7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -117,6 +121,7 @@
 				1538DA1224D0819A005EB495 /* UI */,
 				151427B424CF36970055BCD7 /* ContactListViewController.swift */,
 				1535F8CA24D16601008B0815 /* CallRoomViewController.swift */,
+				1511C1A024D2B8580060564E /* BottomSheetViewController.swift */,
 				151427B624CF36970055BCD7 /* Main.storyboard */,
 				151427B924CF36990055BCD7 /* Assets.xcassets */,
 				151427BB24CF36990055BCD7 /* LaunchScreen.storyboard */,
@@ -156,6 +161,7 @@
 			children = (
 				1535F8CD24D1B167008B0815 /* CameraPreviewLayerView.swift */,
 				1535F8D324D1E74A008B0815 /* BlurView.swift */,
+				1511C1A224D2D6850060564E /* TitleSubtitleLabelView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -319,7 +325,9 @@
 			files = (
 				151427E224D00D930055BCD7 /* Contact.swift in Sources */,
 				1535F8CE24D1B167008B0815 /* CameraPreviewLayerView.swift in Sources */,
+				1511C1A324D2D6850060564E /* TitleSubtitleLabelView.swift in Sources */,
 				151427E424D014250055BCD7 /* ContactInfoTableViewCell.swift in Sources */,
+				1511C1A124D2B8580060564E /* BottomSheetViewController.swift in Sources */,
 				151427B524CF36970055BCD7 /* ContactListViewController.swift in Sources */,
 				1535F8CB24D16601008B0815 /* CallRoomViewController.swift in Sources */,
 				1535F8D424D1E74A008B0815 /* BlurView.swift in Sources */,

@@ -26,7 +26,7 @@ final class CallRoomViewController: UIViewController {
         return view
     }()
     
-// MARK: Data
+    // MARK: Data
     
     private enum CameraAuthorizationStatus {
         case authorized
@@ -54,7 +54,7 @@ final class CallRoomViewController: UIViewController {
     private let captureSessionQueue = DispatchQueue(label: "captureSessionQueue")
     private var cameras: [AVCaptureDevice]?
     
-    // MARK: Setup
+    // MARK: LoadView
     
     override func loadView() {
         super.loadView()
@@ -68,6 +68,8 @@ final class CallRoomViewController: UIViewController {
         cameraPreviewLayerView.anchor(to: self.view)
         blurView.anchor(to: cameraPreviewLayerView)
     }
+    
+    // MARK: ViewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -127,7 +129,8 @@ final class CallRoomViewController: UIViewController {
                 session.addInput(videoDeviceInput)
                 self.videoDeviceInput = videoDeviceInput
                 
-            } else {
+            }
+            else {
                 #warning("Todo no video device to add")
                 cameraAuthStatus = .failed
                 session.commitConfiguration()
@@ -146,7 +149,8 @@ final class CallRoomViewController: UIViewController {
             
             if session.canAddInput(audioDeviceInput) {
                 session.addInput(audioDeviceInput)
-            } else {
+            }
+            else {
                 #warning("Todo no video device to add")
             }
         } catch {
@@ -155,6 +159,8 @@ final class CallRoomViewController: UIViewController {
         
         session.commitConfiguration()
     }
+    
+    // MARK: ViewWillAppear
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -171,14 +177,51 @@ final class CallRoomViewController: UIViewController {
         }
     }
     
+    // MARK: ViewDidAppear
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        addBottomSheetView()
+    }
+    
+    private func addBottomSheetView() {
+        let bottomSheetVC = BottomSheetViewController()
+        
+        self.addChild(bottomSheetVC)
+        self.view.addSubview(bottomSheetVC.view)
+        bottomSheetVC.didMove(toParent: self)
+        
+        let height = view.frame.height
+        let width  = view.frame.width
+        bottomSheetVC.view.frame = CGRect(x: 0, y: self.view.frame.maxY, width: width, height: height)
+    }
+    
+    // MARK: ViewWillDisappear
+
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        captureSessionQueue.async {
+            if self.cameraAuthStatus.isGranted {
+                self.session.stopRunning()
+            }
+        }
+        super.viewWillDisappear(animated)
+    }
+    
     
     private func didUpdateCameraAuthStatus() {
-        switch cameraAuthStatus {
-        case .authorized:
-            blurView.isHidden = true
-        default:
-            blurView.isHidden = false
+        DispatchQueue.main.async {
+            switch self.cameraAuthStatus {
+            case .authorized:
+                self.blurView.isHidden = true
+            default:
+                self.blurView.isHidden = false
+            }
         }
     }
+    
 }
+
+
+
 
