@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		1511C1A124D2B8580060564E /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1511C1A024D2B8580060564E /* BottomSheetViewController.swift */; };
 		1511C1A324D2D6850060564E /* TitleSubtitleLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1511C1A224D2D6850060564E /* TitleSubtitleLabelView.swift */; };
+		1511C1A624D347340060564E /* CameraButtonsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1511C1A524D347340060564E /* CameraButtonsStackView.swift */; };
+		1511C1A824D347E40060564E /* RoundIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1511C1A724D347E40060564E /* RoundIconButton.swift */; };
+		1511C1AA24D40A520060564E /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1511C1A924D40A520060564E /* UIColorExtension.swift */; };
 		151427B124CF36970055BCD7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151427B024CF36970055BCD7 /* AppDelegate.swift */; };
 		151427B324CF36970055BCD7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151427B224CF36970055BCD7 /* SceneDelegate.swift */; };
 		151427B524CF36970055BCD7 /* ContactListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151427B424CF36970055BCD7 /* ContactListViewController.swift */; };
@@ -45,6 +48,9 @@
 /* Begin PBXFileReference section */
 		1511C1A024D2B8580060564E /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
 		1511C1A224D2D6850060564E /* TitleSubtitleLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleSubtitleLabelView.swift; sourceTree = "<group>"; };
+		1511C1A524D347340060564E /* CameraButtonsStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraButtonsStackView.swift; sourceTree = "<group>"; };
+		1511C1A724D347E40060564E /* RoundIconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundIconButton.swift; sourceTree = "<group>"; };
+		1511C1A924D40A520060564E /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		151427AD24CF36970055BCD7 /* BandyerPj.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BandyerPj.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		151427B024CF36970055BCD7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		151427B224CF36970055BCD7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -159,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				1535F8CF24D1B3CF008B0815 /* UIViewExtension.swift */,
+				1511C1A924D40A520060564E /* UIColorExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -167,6 +174,8 @@
 			isa = PBXGroup;
 			children = (
 				1535F8CD24D1B167008B0815 /* CameraPreviewLayerView.swift */,
+				1511C1A524D347340060564E /* CameraButtonsStackView.swift */,
+				1511C1A724D347E40060564E /* RoundIconButton.swift */,
 				1535F8D324D1E74A008B0815 /* BlurView.swift */,
 				1511C1A224D2D6850060564E /* TitleSubtitleLabelView.swift */,
 			);
@@ -332,6 +341,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				151427E224D00D930055BCD7 /* Contact.swift in Sources */,
+				1511C1AA24D40A520060564E /* UIColorExtension.swift in Sources */,
+				1511C1A624D347340060564E /* CameraButtonsStackView.swift in Sources */,
+				1511C1A824D347E40060564E /* RoundIconButton.swift in Sources */,
 				1535F8CE24D1B167008B0815 /* CameraPreviewLayerView.swift in Sources */,
 				1511C1A324D2D6850060564E /* TitleSubtitleLabelView.swift in Sources */,
 				151427E424D014250055BCD7 /* ContactInfoTableViewCell.swift in Sources */,

@@ -10,20 +10,45 @@ import UIKit
 
 final class BottomSheetViewController: UIViewController {
     
+    private var handleView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.Common.darkGray
+        return view
+    }()
+    
     var minHeight: CGFloat {
         return UIScreen.main.bounds.height - (30 + UIApplication.shared.statusBarFrame.height)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupLayout()
         setupProperties()
         addGesture()
+    }
+    
+    private func setupLayout() {
+        view.addSubview(handleView)
+        
+        NSLayoutConstraint.activate([
+           handleView.heightAnchor.constraint(equalToConstant: 5),
+           handleView.widthAnchor.constraint(equalToConstant: 40),
+           handleView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+           handleView.topAnchor.constraint(equalTo: view.topAnchor, constant: 5),
+        ])
     }
     
     private func setupProperties() {
         view.backgroundColor = .clear
         view.layer.cornerRadius = BottomSheetViewController.cornerRadius
         view.layer.masksToBounds = true
+        setupHandleView()
+    }
+    
+    private func setupHandleView() {
+        handleView.layer.cornerRadius = 3
+        handleView.layer.masksToBounds = true
     }
     
     private func addGesture() {
