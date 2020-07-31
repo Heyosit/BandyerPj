@@ -24,7 +24,6 @@ final class BottomSheetViewController: UIViewController {
     private lazy var cameraButtonsStackView: CameraButtonsStackView = {
         let stackView = CameraButtonsStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.delegate = self
         return stackView
     }()
     
@@ -102,6 +101,10 @@ final class BottomSheetViewController: UIViewController {
         }
     }
     
+    func configDelegate(with delegate: CameraButtonsStackViewDelegate) {
+        cameraButtonsStackView.delegate = delegate
+    }
+    
     @objc func panGesture(recognizer: UIPanGestureRecognizer) {
         let translation = recognizer.translation(in: self.view)
         let velocity = recognizer.velocity(in: self.view)
@@ -127,27 +130,7 @@ final class BottomSheetViewController: UIViewController {
     }
 }
 
-extension BottomSheetViewController: CameraButtonsStackViewDelegate {
-    func cameraButtonsStackViewDelegateDidTapVideoButton() {
-        
-    }
-    
-    func cameraButtonsStackViewDelegateDidTapMicrophoneButton() {
-        
-    }
-    
-    func cameraButtonsStackViewDelegateDidTapFlipCameraButton() {
-        
-    }
-    
-    func cameraButtonsStackViewDelegateDidTapExitButton() {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    
-    
-    
-}
+
 
 extension BottomSheetViewController {
     

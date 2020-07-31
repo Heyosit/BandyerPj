@@ -27,9 +27,9 @@ final class CallRoomViewController: UIViewController {
     }()
     
     private lazy var nameDescriptionLabelView: TitleSubtitleLabelView = {
-       let view = TitleSubtitleLabelView()
-       view.translatesAutoresizingMaskIntoConstraints = false
-       return view
+        let view = TitleSubtitleLabelView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     // MARK: Data
@@ -38,6 +38,7 @@ final class CallRoomViewController: UIViewController {
         case authorized
         case notAuthorized
         case failed
+        case notFound
         
         var isGranted: Bool {
             switch self {
@@ -49,16 +50,36 @@ final class CallRoomViewController: UIViewController {
         }
     }
     
+    private enum MicrophoneStatus {
+        case authorized
+        case notAuthorized
+    }
+    
+    private enum FlipCameraStatus {
+        case on
+        case off
+    }
+    
     var contact: Contact?
     
     private let session = AVCaptureSession()
     
-    @objc dynamic var videoDeviceInput: AVCaptureDeviceInput!
+    
     
     private var cameraAuthStatus: CameraAuthorizationStatus = .notAuthorized { didSet { didUpdateCameraAuthStatus() } }
     
     private let captureSessionQueue = DispatchQueue(label: "captureSessionQueue")
-    private var cameras: [AVCaptureDevice]?
+    
+    private var frontVideoDeviceInput: AVCaptureDeviceInput?
+    private var backVideoDeviceInput: AVCaptureDeviceInput?
+    private var currentVideoDeviceInput: AVCaptureDeviceInput?
+    
+    private var currentAudioDeviceInput: AVCaptureDeviceInput?
+    
+    private var microphoneStatus: MicrophoneStatus = .notAuthorized
+    private var currentCameraPosition: AVCaptureDevice.Position = .back
+    private var canFlipCamera: FlipCameraStatus = .off
+    
     
     // MARK: LoadView
     
@@ -91,7 +112,7 @@ final class CallRoomViewController: UIViewController {
     }
     
     private func setup() {
-        view.backgroundColor = .black
+        view.backgroundColor = .white
         nameDescriptionLabelView.config(title: contact?.name)
         setupCameraPreviewLayerView()
     }
@@ -123,56 +144,78 @@ final class CallRoomViewController: UIViewController {
         }
     }
     
+    
+    
     private func startSession() {
         guard cameraAuthStatus.isGranted else { return }
         
         session.beginConfiguration()
         session.sessionPreset = .high
         
+        setupVideoDevices()
+        setupAudioDevices()
+        
+        session.commitConfiguration()
+    }
+    
+    private func getCaptureDeviceInput(withPosition position: AVCaptureDevice.Position) -> AVCaptureDeviceInput? {
         do {
-            cameras = AVCaptureDevice.devices(for: AVMediaType.video)
-            
-            guard let videoDevice = cameras?.first else {
-                #warning("Todo video device")
-                cameraAuthStatus = .failed
-                session.commitConfiguration()
-                return
+            let devices = AVCaptureDevice.devices(for: AVMediaType.video)
+            for device in devices {
+                if device.position == position {
+                    let videoDeviceInput = try AVCaptureDeviceInput(device: device)
+                    return videoDeviceInput
+                }
             }
-            let videoDeviceInput = try AVCaptureDeviceInput(device: videoDevice)
-            
-            if session.canAddInput(videoDeviceInput) {
-                session.addInput(videoDeviceInput)
-                self.videoDeviceInput = videoDeviceInput
-                
+            return nil
+        }
+        catch {
+            return nil
+        }
+    }
+    
+    private func addVideoDeviceInput(videoDeviceInput: AVCaptureDeviceInput, with position: AVCaptureDevice.Position) {
+        session.addInput(videoDeviceInput)
+        self.currentVideoDeviceInput = videoDeviceInput
+        currentCameraPosition = .back
+    }
+    
+    private func setupVideoDevices() {
+        
+        backVideoDeviceInput = getCaptureDeviceInput(withPosition: .back)
+        frontVideoDeviceInput = getCaptureDeviceInput(withPosition: .front)
+        canFlipCamera = .off
+        if let videoDeviceInput = backVideoDeviceInput, session.canAddInput(videoDeviceInput) {
+            addVideoDeviceInput(videoDeviceInput: videoDeviceInput, with: .back)
+            if let _ = frontVideoDeviceInput {
+                canFlipCamera = .on
             }
-            else {
-                #warning("Todo no video device to add")
-                cameraAuthStatus = .failed
-                session.commitConfiguration()
-                return
-            }
-        } catch {
-            #warning("Todo error creating video device")
-            cameraAuthStatus = .failed
-            session.commitConfiguration()
+        }
+        else if let videoDeviceInput = frontVideoDeviceInput, session.canAddInput(videoDeviceInput) {
+            addVideoDeviceInput(videoDeviceInput: videoDeviceInput, with: .front)
+        }
+        else {
+            cameraAuthStatus = .notFound
             return
         }
         
+    }
+    
+    private func setupAudioDevices() {
         do {
             let audioDevice = AVCaptureDevice.default(for: .audio)
             let audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice!)
             
             if session.canAddInput(audioDeviceInput) {
                 session.addInput(audioDeviceInput)
+                microphoneStatus = .authorized
             }
             else {
-                #warning("Todo no video device to add")
+                microphoneStatus = .notAuthorized
             }
         } catch {
-            #warning("Todo error creating audio device")
+            microphoneStatus = .notAuthorized
         }
-        
-        session.commitConfiguration()
     }
     
     // MARK: ViewWillAppear
@@ -187,6 +230,7 @@ final class CallRoomViewController: UIViewController {
                 
             default:
                 #warning("Todo")
+                self.session.startRunning()
                 
             }
         }
@@ -209,10 +253,11 @@ final class CallRoomViewController: UIViewController {
         let height = view.frame.height
         let width  = view.frame.width
         bottomSheetVC.view.frame = CGRect(x: 0, y: self.view.frame.maxY, width: width, height: height)
+        bottomSheetVC.configDelegate(with: self)
     }
     
     // MARK: ViewWillDisappear
-
+    
     
     override func viewWillDisappear(_ animated: Bool) {
         captureSessionQueue.async {
@@ -233,6 +278,54 @@ final class CallRoomViewController: UIViewController {
                 self.blurView.isHidden = false
             }
         }
+    }
+    
+    
+}
+
+extension CallRoomViewController: CameraButtonsStackViewDelegate {
+    func cameraButtonsStackViewDelegateDidTapVideoButton() {
+        
+    }
+    
+    func cameraButtonsStackViewDelegateDidTapMicrophoneButton() {
+        
+    }
+    
+    func cameraButtonsStackViewDelegateDidTapFlipCameraButton() {
+        guard let backCameraInput = backVideoDeviceInput, let frontCameraInput = frontVideoDeviceInput else {
+            return
+        }
+        
+        session.beginConfiguration()
+        switch currentCameraPosition {
+        case .back:
+            changeVideoDeviceInput(with: frontCameraInput, position: .front)
+        case .front:
+            changeVideoDeviceInput(with: backCameraInput, position: .back)
+        default:
+            changeVideoDeviceInput(with: backCameraInput, position: .back)
+        }
+        session.commitConfiguration()
+    }
+    
+    private func changeVideoDeviceInput(with newVideoDeviceInput: AVCaptureDeviceInput, position: AVCaptureDevice.Position) {
+        guard let currentVideoDeviceInput = currentVideoDeviceInput else {
+            return
+        }
+        if session.inputs.contains(currentVideoDeviceInput) == true {
+            session.removeInput(currentVideoDeviceInput)
+            session.addInput(newVideoDeviceInput)
+            self.currentVideoDeviceInput = newVideoDeviceInput
+            currentCameraPosition = position
+        }
+        else {
+            canFlipCamera = .off
+        }
+    }
+    
+    func cameraButtonsStackViewDelegateDidTapExitButton() {
+        self.dismiss(animated: true, completion: nil)
     }
     
 }
