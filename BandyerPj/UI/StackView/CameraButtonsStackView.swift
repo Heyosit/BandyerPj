@@ -105,13 +105,13 @@ extension CameraButtonsStackView: CallRoomViewControllerDelegate {
             switch button {
             case .video:
                 self.videoButton.isEnabled = !disable
-                self.videoButton.alpha = disable ? 0.5 : 1
+                self.videoButton.alpha = disable ? CameraButtonsStackView.buttonAlphaDisabledState : 1
             case .microphone:
                 self.microphoneButton.isEnabled = !disable
-                self.microphoneButton.alpha = disable ? 0.5 : 1
+                self.microphoneButton.alpha = disable ? CameraButtonsStackView.buttonAlphaDisabledState : 1
             case .flipCamera:
                 self.microphoneButton.isEnabled = !disable
-                self.flipCameraButton.alpha = disable ? 0.5 : 1
+                self.flipCameraButton.alpha = disable ? CameraButtonsStackView.buttonAlphaDisabledState : 1
             default:
                 break
             }
@@ -128,7 +128,8 @@ extension CameraButtonsStackView: CallRoomViewControllerDelegate {
             break
         }
     }
-    
-    
-    
+}
+
+extension CameraButtonsStackView {
+    static let buttonAlphaDisabledState: CGFloat = 0.5
 }

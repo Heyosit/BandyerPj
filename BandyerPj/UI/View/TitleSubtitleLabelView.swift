@@ -17,7 +17,7 @@ final class TitleSubtitleLabelView: UIView {
         label.numberOfLines = 1
         label.textAlignment = .center
         label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 45, weight: .regular)
+        label.font = UIFont.systemFont(ofSize: TitleSubtitleLabelView.titleLabelFontSize, weight: .regular)
         return label
     }()
     
@@ -28,8 +28,8 @@ final class TitleSubtitleLabelView: UIView {
         label.numberOfLines = 1
         label.textAlignment = .center
         label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 30, weight: .regular)
-        label.text = "FaceTime..."
+        label.font = UIFont.systemFont(ofSize: TitleSubtitleLabelView.subtitleLabelFontSize, weight: .regular)
+        label.text = TitleSubtitleLabelView.subtitleLabelText
         return label
     }()
     
@@ -54,7 +54,7 @@ final class TitleSubtitleLabelView: UIView {
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 15),
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: TitleSubtitleLabelView.subtitleLabelTopSpacing),
             subtitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
             subtitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
             subtitleLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -73,4 +73,13 @@ final class TitleSubtitleLabelView: UIView {
         }
     }
     
+}
+
+//MARK: Constants
+
+extension TitleSubtitleLabelView {
+    static let titleLabelFontSize: CGFloat = 45
+    static let subtitleLabelFontSize: CGFloat = 30
+    static let subtitleLabelText = "Facetime..."
+    static let subtitleLabelTopSpacing: CGFloat = 15
 }

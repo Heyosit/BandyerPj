@@ -87,7 +87,5 @@ extension ContactListViewController: UITableViewDelegate, UITableViewDataSource 
         self.show(callRoomViewController, sender: nil)
         
     }
-    
-    
 }
 

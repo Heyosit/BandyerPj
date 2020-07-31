@@ -130,6 +130,8 @@ final class BottomSheetViewController: UIViewController {
     }
 }
 
+//MARK: Constants
+
 extension BottomSheetViewController {
     
     static let maxHeight: CGFloat = (UIScreen.main.bounds.height / 5) * 4
@@ -142,9 +144,6 @@ extension BottomSheetViewController {
     static let stackViewTopSpacing: CGFloat = 35
     static let stackViewSideSpacing: CGFloat = 30
     static let animationDuration: Double = 0.3
-    
-
-    
 }
 
 

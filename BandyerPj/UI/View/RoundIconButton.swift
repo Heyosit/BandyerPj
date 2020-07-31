@@ -34,8 +34,8 @@ final class RoundIconButton: UIButton {
     private func setUpLayout() {
         
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: 70),
-            widthAnchor.constraint(equalToConstant: 70),
+            heightAnchor.constraint(equalToConstant: RoundIconButton.buttonHeightWidth),
+            widthAnchor.constraint(equalToConstant: RoundIconButton.buttonHeightWidth),
             
         ])
     }
@@ -61,5 +61,11 @@ final class RoundIconButton: UIButton {
         }
     }
     
+}
+
+//MARK: Constants
+
+extension RoundIconButton {
+    static let buttonHeightWidth: CGFloat = 70
 }
 

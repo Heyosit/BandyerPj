@@ -90,5 +90,4 @@ extension ContactInfoTableViewCell {
     static var leadingLabelSpacing: CGFloat = 15
     static var topBottomLabelSpacing: CGFloat = 5
     static var nameLabelFontSize: CGFloat = 16
-    
 }

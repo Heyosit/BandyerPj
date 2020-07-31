@@ -24,9 +24,8 @@ final class CallRoomViewController: UIViewController {
         return view
     }()
     
-    private lazy var blurView: UIVisualEffectView = {
-        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
-        let view = UIVisualEffectView(effect: blurEffect)
+    private lazy var blurView: BlurView = {
+        let view = BlurView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -75,6 +74,13 @@ final class CallRoomViewController: UIViewController {
     private enum CameraStatus {
         case on
         case off
+    }
+    
+    private enum DescriptionText: String {
+        case cameraDisabledByUser = "Camera has been disabled by the user"
+        case noCameraAvailable = "No cameras available"
+        case notAuthorized = "Use of camera not authorized"
+        case failed = "Something went wrong"
     }
     
     weak var delegate: CallRoomViewControllerDelegate?
@@ -137,6 +143,19 @@ final class CallRoomViewController: UIViewController {
         setupCameraPreviewLayerView()
     }
     
+    private func addBottomSheetView() {
+        
+        self.addChild(bottomSheetVC)
+        self.view.addSubview(bottomSheetVC.view)
+        bottomSheetVC.didMove(toParent: self)
+        
+        let height = view.frame.height
+        let width  = view.frame.width
+        bottomSheetVC.view.frame = CGRect(x: 0, y: self.view.frame.maxY, width: width, height: height)
+        bottomSheetVC.configDelegate(with: self)
+        delegate = bottomSheetVC.cameraButtonsStackView
+    }
+    
     private func setupCameraPreviewLayerView() {
         cameraPreviewLayerView.session = self.session
         checkCameraAuthorization()
@@ -167,7 +186,7 @@ final class CallRoomViewController: UIViewController {
     
     
     private func startSession() {
-        guard cameraAuthStatus.isGranted else { return }
+        
         
         session.beginConfiguration()
         session.sessionPreset = .high
@@ -201,6 +220,12 @@ final class CallRoomViewController: UIViewController {
     }
     
     private func setupVideoDevices() {
+        
+        guard cameraAuthStatus.isGranted else {
+            cameraStatus = .off
+            canFlipCamera = .off
+            return
+        }
         
         backVideoDeviceInput = getCaptureDeviceInput(withPosition: .back)
         frontVideoDeviceInput = getCaptureDeviceInput(withPosition: .front)
@@ -260,40 +285,11 @@ final class CallRoomViewController: UIViewController {
         super.viewWillAppear(animated)
         
         captureSessionQueue.async {
-            switch self.cameraAuthStatus {
-            case .authorized:
-                self.session.startRunning()
-                
-            default:
-                #warning("Todo")
-                self.session.startRunning()
-                
-            }
+            self.session.startRunning()
         }
     }
     
-    // MARK: ViewDidAppear
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-    }
-    
-    private func addBottomSheetView() {
-        
-        self.addChild(bottomSheetVC)
-        self.view.addSubview(bottomSheetVC.view)
-        bottomSheetVC.didMove(toParent: self)
-        
-        let height = view.frame.height
-        let width  = view.frame.width
-        bottomSheetVC.view.frame = CGRect(x: 0, y: self.view.frame.maxY, width: width, height: height)
-        bottomSheetVC.configDelegate(with: self)
-        delegate = bottomSheetVC.cameraButtonsStackView
-    }
-    
     // MARK: ViewWillDisappear
-    
     
     override func viewWillDisappear(_ animated: Bool) {
         captureSessionQueue.async {
@@ -312,8 +308,17 @@ final class CallRoomViewController: UIViewController {
             case .authorized:
                 self.blurView.isHidden = true
                 self.delegate?.callRoomViewControllerDelegateShouldDisableButton(.video, disable: false)
-            default:
+            case .notFound:
                 self.blurView.isHidden = false
+                self.blurView.descriptionText = DescriptionText.noCameraAvailable.rawValue
+                self.delegate?.callRoomViewControllerDelegateShouldDisableButton(.video, disable: true)
+            case .notAuthorized:
+                self.blurView.isHidden = false
+                self.blurView.descriptionText = DescriptionText.notAuthorized.rawValue
+                self.delegate?.callRoomViewControllerDelegateShouldDisableButton(.video, disable: true)
+            case .failed:
+                self.blurView.isHidden = false
+                self.blurView.descriptionText = DescriptionText.failed.rawValue
                 self.delegate?.callRoomViewControllerDelegateShouldDisableButton(.video, disable: true)
             }
         }
@@ -363,30 +368,15 @@ final class CallRoomViewController: UIViewController {
 extension CallRoomViewController: CameraButtonsStackViewDelegate {
     
     func cameraButtonsStackViewDelegateDidTapVideoButton() {
-        guard let currentVideoDeviceInput = currentVideoDeviceInput else {
-            cameraAuthStatus = .failed
-            return
-        }
-        
-        if session.inputs.contains(currentVideoDeviceInput) {
-            session.removeInput(currentVideoDeviceInput)
+        if cameraStatus == .on {
             cameraStatus = .off
             self.blurView.isHidden = false
+            self.blurView.descriptionText = DescriptionText.cameraDisabledByUser.rawValue
         }
         else {
-            session.addInput(currentVideoDeviceInput)
             cameraStatus = .on
             self.blurView.isHidden = true
         }
-        
-//        if cameraStatus == .on {
-//            cameraStatus = .off
-//            self.blurView.isHidden = false
-//        }
-//        else {
-//            cameraStatus = .on
-//            self.blurView.isHidden = true
-//        }
     }
     
     func cameraButtonsStackViewDelegateDidTapMicrophoneButton() {
@@ -437,7 +427,4 @@ extension CallRoomViewController: CameraButtonsStackViewDelegate {
     func cameraButtonsStackViewDelegateDidTapExitButton() {
         self.dismiss(animated: true, completion: nil)
     }
-    
 }
-
-
