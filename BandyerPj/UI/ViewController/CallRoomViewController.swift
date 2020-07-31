@@ -50,7 +50,7 @@ final class CallRoomViewController: UIViewController {
         }
     }
     
-    private enum MicrophoneStatus {
+    private enum MicrophoneAuthStatus {
         case authorized
         case notAuthorized
     }
@@ -60,13 +60,21 @@ final class CallRoomViewController: UIViewController {
         case off
     }
     
+    private enum MicrophoneStatus {
+        case on
+        case off
+    }
+    
+    private enum CameraStatus {
+        case on
+        case off
+    }
     var contact: Contact?
     
     private let session = AVCaptureSession()
     
-    
-    
     private var cameraAuthStatus: CameraAuthorizationStatus = .notAuthorized { didSet { didUpdateCameraAuthStatus() } }
+    private var microphoneAuthStatus: MicrophoneAuthStatus = .notAuthorized
     
     private let captureSessionQueue = DispatchQueue(label: "captureSessionQueue")
     
@@ -76,9 +84,11 @@ final class CallRoomViewController: UIViewController {
     
     private var currentAudioDeviceInput: AVCaptureDeviceInput?
     
-    private var microphoneStatus: MicrophoneStatus = .notAuthorized
+    
     private var currentCameraPosition: AVCaptureDevice.Position = .back
     private var canFlipCamera: FlipCameraStatus = .off
+    private var microphoneStatus: MicrophoneStatus = .off
+    private var cameraStatus: CameraStatus = .off
     
     
     // MARK: LoadView
@@ -190,12 +200,15 @@ final class CallRoomViewController: UIViewController {
             if let _ = frontVideoDeviceInput {
                 canFlipCamera = .on
             }
+            cameraStatus = .on
         }
         else if let videoDeviceInput = frontVideoDeviceInput, session.canAddInput(videoDeviceInput) {
             addVideoDeviceInput(videoDeviceInput: videoDeviceInput, with: .front)
+            cameraStatus = .on
         }
         else {
             cameraAuthStatus = .notFound
+            cameraStatus = .off
             return
         }
         
@@ -208,13 +221,17 @@ final class CallRoomViewController: UIViewController {
             
             if session.canAddInput(audioDeviceInput) {
                 session.addInput(audioDeviceInput)
-                microphoneStatus = .authorized
+                currentAudioDeviceInput = audioDeviceInput
+                microphoneAuthStatus = .authorized
+                microphoneStatus = .on
             }
             else {
-                microphoneStatus = .notAuthorized
+                microphoneAuthStatus = .notAuthorized
+                microphoneStatus = .off
             }
         } catch {
-            microphoneStatus = .notAuthorized
+            microphoneAuthStatus = .notAuthorized
+            microphoneStatus = .off
         }
     }
     
@@ -284,12 +301,48 @@ final class CallRoomViewController: UIViewController {
 }
 
 extension CallRoomViewController: CameraButtonsStackViewDelegate {
+    
     func cameraButtonsStackViewDelegateDidTapVideoButton() {
+        guard let currentVideoDeviceInput = currentVideoDeviceInput else {
+            cameraAuthStatus = .failed
+            return
+        }
         
+        if session.inputs.contains(currentVideoDeviceInput) {
+            session.removeInput(currentVideoDeviceInput)
+            cameraStatus = .off
+            self.blurView.isHidden = false
+        }
+        else {
+            session.addInput(currentVideoDeviceInput)
+            cameraStatus = .on
+            self.blurView.isHidden = true
+        }
+        
+//        if cameraStatus == .on {
+//            cameraStatus = .off
+//            self.blurView.isHidden = false
+//        }
+//        else {
+//            cameraStatus = .on
+//            self.blurView.isHidden = true
+//        }
     }
     
     func cameraButtonsStackViewDelegateDidTapMicrophoneButton() {
-        
+        guard let currentAudioDeviceInput = currentAudioDeviceInput else {
+            microphoneAuthStatus = .notAuthorized
+            return
+        }
+        session.beginConfiguration()
+        if session.inputs.contains(currentAudioDeviceInput) {
+            session.removeInput(currentAudioDeviceInput)
+            microphoneStatus = .off
+        } else {
+            session.addInput(currentAudioDeviceInput)
+            microphoneStatus = .on
+        }
+        session.commitConfiguration()
     }
     
     func cameraButtonsStackViewDelegateDidTapFlipCameraButton() {

@@ -51,8 +51,6 @@ final class BottomSheetViewController: UIViewController {
            cameraButtonsStackView.topAnchor.constraint(equalTo: handleView.bottomAnchor, constant: 35),
            cameraButtonsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
            view.trailingAnchor.constraint(equalTo: cameraButtonsStackView.trailingAnchor, constant: 30),
-           
-           
         ])
     }
     
