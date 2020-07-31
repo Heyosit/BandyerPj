@@ -12,6 +12,7 @@
 		1511C1A624D347340060564E /* CameraButtonsStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1511C1A524D347340060564E /* CameraButtonsStackView.swift */; };
 		1511C1A824D347E40060564E /* RoundIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1511C1A724D347E40060564E /* RoundIconButton.swift */; };
 		1511C1AA24D40A520060564E /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1511C1A924D40A520060564E /* UIColorExtension.swift */; };
+		1511C1AC24D4982A0060564E /* ButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1511C1AB24D4982A0060564E /* ButtonStyle.swift */; };
 		151427B124CF36970055BCD7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151427B024CF36970055BCD7 /* AppDelegate.swift */; };
 		151427B324CF36970055BCD7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151427B224CF36970055BCD7 /* SceneDelegate.swift */; };
 		151427B524CF36970055BCD7 /* ContactListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 151427B424CF36970055BCD7 /* ContactListViewController.swift */; };
@@ -51,6 +52,7 @@
 		1511C1A524D347340060564E /* CameraButtonsStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraButtonsStackView.swift; sourceTree = "<group>"; };
 		1511C1A724D347E40060564E /* RoundIconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundIconButton.swift; sourceTree = "<group>"; };
 		1511C1A924D40A520060564E /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
+		1511C1AB24D4982A0060564E /* ButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonStyle.swift; sourceTree = "<group>"; };
 		151427AD24CF36970055BCD7 /* BandyerPj.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BandyerPj.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		151427B024CF36970055BCD7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		151427B224CF36970055BCD7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -106,6 +108,14 @@
 				1511C1A024D2B8580060564E /* BottomSheetViewController.swift */,
 			);
 			path = ViewController;
+			sourceTree = "<group>";
+		};
+		1511C1AD24D498E80060564E /* StackView */ = {
+			isa = PBXGroup;
+			children = (
+				1511C1A524D347340060564E /* CameraButtonsStackView.swift */,
+			);
+			path = StackView;
 			sourceTree = "<group>";
 		};
 		151427A424CF36970055BCD7 = {
@@ -174,7 +184,6 @@
 			isa = PBXGroup;
 			children = (
 				1535F8CD24D1B167008B0815 /* CameraPreviewLayerView.swift */,
-				1511C1A524D347340060564E /* CameraButtonsStackView.swift */,
 				1511C1A724D347E40060564E /* RoundIconButton.swift */,
 				1535F8D324D1E74A008B0815 /* BlurView.swift */,
 				1511C1A224D2D6850060564E /* TitleSubtitleLabelView.swift */,
@@ -186,6 +195,7 @@
 			isa = PBXGroup;
 			children = (
 				151427E124D00D930055BCD7 /* Contact.swift */,
+				1511C1AB24D4982A0060564E /* ButtonStyle.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -193,6 +203,7 @@
 		1538DA1224D0819A005EB495 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				1511C1AD24D498E80060564E /* StackView */,
 				1511C1A424D2E2A20060564E /* ViewController */,
 				1535F8D224D1B8E9008B0815 /* View */,
 				1535F8D124D1B8D2008B0815 /* Extension */,
@@ -350,6 +361,7 @@
 				1511C1A124D2B8580060564E /* BottomSheetViewController.swift in Sources */,
 				151427B524CF36970055BCD7 /* ContactListViewController.swift in Sources */,
 				1535F8CB24D16601008B0815 /* CallRoomViewController.swift in Sources */,
+				1511C1AC24D4982A0060564E /* ButtonStyle.swift in Sources */,
 				1535F8D424D1E74A008B0815 /* BlurView.swift in Sources */,
 				151427B124CF36970055BCD7 /* AppDelegate.swift in Sources */,
 				1535F8D024D1B3CF008B0815 /* UIViewExtension.swift in Sources */,

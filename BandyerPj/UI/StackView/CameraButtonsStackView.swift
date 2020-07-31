@@ -20,25 +20,25 @@ final class CameraButtonsStackView: UIStackView {
     //MARK: UI
     
     private lazy var videoButton: RoundIconButton = {
-        let button = RoundIconButton(type: RoundIconButton.ButtonType.video)
+        let button = RoundIconButton(type: ButtonStyle.video)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     private lazy var microphoneButton: RoundIconButton = {
-        let button = RoundIconButton(type: RoundIconButton.ButtonType.microphone)
+        let button = RoundIconButton(type: ButtonStyle.microphone)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     private lazy var flipCameraButton: RoundIconButton = {
-        let button = RoundIconButton(type: RoundIconButton.ButtonType.flipCamera)
+        let button = RoundIconButton(type: ButtonStyle.flipCamera)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     private lazy var exitButton: RoundIconButton = {
-        let button = RoundIconButton(type: RoundIconButton.ButtonType.exit)
+        let button = RoundIconButton(type: ButtonStyle.exit)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -95,6 +95,38 @@ final class CameraButtonsStackView: UIStackView {
     
     @objc private func exitButtonTapped() {
         delegate?.cameraButtonsStackViewDelegateDidTapExitButton()
+    }
+}
+
+extension CameraButtonsStackView: CallRoomViewControllerDelegate {
+    
+    func callRoomViewControllerDelegateShouldDisableButton(_ button: ButtonStyle, disable: Bool) {
+        DispatchQueue.main.async {
+            switch button {
+            case .video:
+                self.videoButton.isEnabled = !disable
+                self.videoButton.alpha = disable ? 0.5 : 1
+            case .microphone:
+                self.microphoneButton.isEnabled = !disable
+                self.microphoneButton.alpha = disable ? 0.5 : 1
+            case .flipCamera:
+                self.microphoneButton.isEnabled = !disable
+                self.flipCameraButton.alpha = disable ? 0.5 : 1
+            default:
+                break
+            }
+        }
+    }
+    
+    func callRoomViewControllerDelegateSwitchButton(_ button: ButtonStyle, shouldActivate: Bool) {
+        switch button {
+        case .video:
+            videoButton.active = shouldActivate
+        case .microphone:
+            microphoneButton.active = shouldActivate
+        default:
+            break
+        }
     }
     
     

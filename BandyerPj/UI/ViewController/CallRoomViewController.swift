@@ -9,6 +9,11 @@
 import UIKit
 import AVFoundation
 
+protocol CallRoomViewControllerDelegate: class {
+    func callRoomViewControllerDelegateShouldDisableButton(_ button: ButtonStyle, disable: Bool)
+    func callRoomViewControllerDelegateSwitchButton(_ button: ButtonStyle, shouldActivate: Bool)
+}
+
 final class CallRoomViewController: UIViewController {
     
     // MARK: UI
@@ -31,6 +36,8 @@ final class CallRoomViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    private let bottomSheetVC = BottomSheetViewController()
     
     // MARK: Data
     
@@ -69,14 +76,16 @@ final class CallRoomViewController: UIViewController {
         case on
         case off
     }
+    
+    weak var delegate: CallRoomViewControllerDelegate?
+    
     var contact: Contact?
     
     private let session = AVCaptureSession()
+    private let captureSessionQueue = DispatchQueue(label: "captureSessionQueue")
     
     private var cameraAuthStatus: CameraAuthorizationStatus = .notAuthorized { didSet { didUpdateCameraAuthStatus() } }
-    private var microphoneAuthStatus: MicrophoneAuthStatus = .notAuthorized
-    
-    private let captureSessionQueue = DispatchQueue(label: "captureSessionQueue")
+    private var microphoneAuthStatus: MicrophoneAuthStatus = .notAuthorized { didSet { didUpdateMicrophoneAuthStatus() } }
     
     private var frontVideoDeviceInput: AVCaptureDeviceInput?
     private var backVideoDeviceInput: AVCaptureDeviceInput?
@@ -84,11 +93,10 @@ final class CallRoomViewController: UIViewController {
     
     private var currentAudioDeviceInput: AVCaptureDeviceInput?
     
-    
     private var currentCameraPosition: AVCaptureDevice.Position = .back
-    private var canFlipCamera: FlipCameraStatus = .off
-    private var microphoneStatus: MicrophoneStatus = .off
-    private var cameraStatus: CameraStatus = .off
+    private var canFlipCamera: FlipCameraStatus = .off { didSet { didUpdateCanFlipCameraStatus() } }
+    private var microphoneStatus: MicrophoneStatus = .off { didSet { didUpdateMicrophoneStatus() } }
+    private var cameraStatus: CameraStatus = .off { didSet { didUpdateCameraStatus() } }
     
     
     // MARK: LoadView
@@ -124,6 +132,7 @@ final class CallRoomViewController: UIViewController {
     private func setup() {
         view.backgroundColor = .white
         nameDescriptionLabelView.config(title: contact?.name)
+        addBottomSheetView()
         setupCameraPreviewLayerView()
     }
     
@@ -257,11 +266,10 @@ final class CallRoomViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        addBottomSheetView()
+        
     }
     
     private func addBottomSheetView() {
-        let bottomSheetVC = BottomSheetViewController()
         
         self.addChild(bottomSheetVC)
         self.view.addSubview(bottomSheetVC.view)
@@ -271,6 +279,7 @@ final class CallRoomViewController: UIViewController {
         let width  = view.frame.width
         bottomSheetVC.view.frame = CGRect(x: 0, y: self.view.frame.maxY, width: width, height: height)
         bottomSheetVC.configDelegate(with: self)
+        delegate = bottomSheetVC.cameraButtonsStackView
     }
     
     // MARK: ViewWillDisappear
@@ -285,15 +294,56 @@ final class CallRoomViewController: UIViewController {
         super.viewWillDisappear(animated)
     }
     
+    //MARK: Update Methods
     
     private func didUpdateCameraAuthStatus() {
         DispatchQueue.main.async {
             switch self.cameraAuthStatus {
             case .authorized:
                 self.blurView.isHidden = true
+                self.delegate?.callRoomViewControllerDelegateShouldDisableButton(.video, disable: false)
             default:
                 self.blurView.isHidden = false
+                self.delegate?.callRoomViewControllerDelegateShouldDisableButton(.video, disable: true)
             }
+        }
+    }
+    
+    private func didUpdateMicrophoneAuthStatus() {
+        DispatchQueue.main.async {
+            switch self.microphoneAuthStatus {
+            case .authorized:
+                self.delegate?.callRoomViewControllerDelegateShouldDisableButton(.microphone, disable: false)
+            default:
+                self.delegate?.callRoomViewControllerDelegateShouldDisableButton(.microphone, disable: true)
+            }
+        }
+    }
+    
+    private func didUpdateCanFlipCameraStatus() {
+        switch canFlipCamera {
+        case .on:
+            delegate?.callRoomViewControllerDelegateShouldDisableButton(.flipCamera, disable: false)
+        case .off:
+            delegate?.callRoomViewControllerDelegateShouldDisableButton(.flipCamera, disable: true)
+        }
+    }
+    
+    private func didUpdateMicrophoneStatus() {
+        switch microphoneStatus {
+        case .on:
+            delegate?.callRoomViewControllerDelegateSwitchButton(.microphone, shouldActivate: true)
+        case .off:
+            delegate?.callRoomViewControllerDelegateSwitchButton(.microphone, shouldActivate: false)
+        }
+    }
+    
+    private func didUpdateCameraStatus() {
+        switch cameraStatus {
+        case .on:
+            delegate?.callRoomViewControllerDelegateSwitchButton(.video, shouldActivate: true)
+        case .off:
+            delegate?.callRoomViewControllerDelegateSwitchButton(.video, shouldActivate: false)
         }
     }
     
@@ -372,9 +422,6 @@ extension CallRoomViewController: CameraButtonsStackViewDelegate {
             self.currentVideoDeviceInput = newVideoDeviceInput
             currentCameraPosition = position
         }
-        else {
-            canFlipCamera = .off
-        }
     }
     
     func cameraButtonsStackViewDelegateDidTapExitButton() {
@@ -382,7 +429,5 @@ extension CallRoomViewController: CameraButtonsStackViewDelegate {
     }
     
 }
-
-
 
 

@@ -10,9 +10,12 @@ import UIKit
 
 final class RoundIconButton: UIButton {
     
-    private var type: ButtonType = .video
+    var active = false { didSet { didUpdateActive() } }
     
-    convenience init(type: ButtonType) {
+    private var type: ButtonStyle = .video
+    
+    
+    convenience init(type: ButtonStyle) {
         self.init()
         self.type = type
         setupButtonStyle()
@@ -38,7 +41,6 @@ final class RoundIconButton: UIButton {
     }
     
     private func setupProperties() {
-        //        backImageView.image = UIImage(named: "exit")
         self.layer.cornerRadius = 35
         self.layer.masksToBounds = true
         
@@ -46,43 +48,18 @@ final class RoundIconButton: UIButton {
     
     private func setupButtonStyle() {
         self.backgroundColor = type.backgroundColor
-        if let image = UIImage(named: type.iconName(isActive: true)) {
+        if let image = UIImage(named: type.iconName(isActive: active)) {
             self.setImage(image.withRenderingMode(.automatic), for: .normal)
+        }
+    }
+    
+    func didUpdateActive() {
+        DispatchQueue.main.async {
+            if let image = UIImage(named: self.type.iconName(isActive: self.active)) {
+                self.setImage(image.withRenderingMode(.automatic), for: .normal)
+            }
         }
     }
     
 }
 
-extension RoundIconButton {
-    enum ButtonType {
-        case video
-        case microphone
-        case flipCamera
-        case exit
-        
-        var backgroundColor: UIColor {
-            switch self {
-            case .video,
-                 .microphone,
-                 .flipCamera:
-                return UIColor.darkGray
-            case .exit:
-                return UIColor.red
-            }
-        }
-        
-        func iconName(isActive: Bool = false) -> String {
-            switch self {
-            case .video:
-                return isActive ? "􀍊" : "􀍎"
-            case .microphone:
-                return isActive ? "􀊱" : "􀊳"
-            case .flipCamera:
-                return "􀌣"
-            case .exit:
-                return "􀆄"
-                
-            }
-        }
-    }
-}

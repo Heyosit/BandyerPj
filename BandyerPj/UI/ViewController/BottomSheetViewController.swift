@@ -21,7 +21,7 @@ final class BottomSheetViewController: UIViewController {
         return view
     }()
     
-    private lazy var cameraButtonsStackView: CameraButtonsStackView = {
+    lazy var cameraButtonsStackView: CameraButtonsStackView = {
         let stackView = CameraButtonsStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -59,7 +59,6 @@ final class BottomSheetViewController: UIViewController {
         view.layer.cornerRadius = BottomSheetViewController.cornerRadius
         view.layer.masksToBounds = true
         setupHandleView()
-//        cameraButtonsStackView.delegate = self
     }
     
     private func setupHandleView() {
@@ -77,7 +76,7 @@ final class BottomSheetViewController: UIViewController {
         addBlurView()
     }
     
-    func addBlurView(){
+    private func addBlurView(){
         let blurEffect = UIBlurEffect.init(style: .dark)
         let visualEffect = UIVisualEffectView.init(effect: blurEffect)
         let bluredView = UIVisualEffectView.init(effect: blurEffect)
@@ -99,11 +98,7 @@ final class BottomSheetViewController: UIViewController {
         }
     }
     
-    func configDelegate(with delegate: CameraButtonsStackViewDelegate) {
-        cameraButtonsStackView.delegate = delegate
-    }
-    
-    @objc func panGesture(recognizer: UIPanGestureRecognizer) {
+    @objc private func panGesture(recognizer: UIPanGestureRecognizer) {
         let translation = recognizer.translation(in: self.view)
         let velocity = recognizer.velocity(in: self.view)
         let y = self.view.frame.minY
@@ -126,9 +121,11 @@ final class BottomSheetViewController: UIViewController {
             }, completion: nil)
         }
     }
+    
+    func configDelegate(with delegate: CameraButtonsStackViewDelegate) {
+        cameraButtonsStackView.delegate = delegate
+    }
 }
-
-
 
 extension BottomSheetViewController {
     
