@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol BottomSheetViewControllerDelegate {
+    
+}
+
 final class BottomSheetViewController: UIViewController {
     
     private var handleView: UIView = {
@@ -20,6 +24,7 @@ final class BottomSheetViewController: UIViewController {
     private lazy var cameraButtonsStackView: CameraButtonsStackView = {
         let stackView = CameraButtonsStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.delegate = self
         return stackView
     }()
     
@@ -57,6 +62,7 @@ final class BottomSheetViewController: UIViewController {
         view.layer.cornerRadius = BottomSheetViewController.cornerRadius
         view.layer.masksToBounds = true
         setupHandleView()
+//        cameraButtonsStackView.delegate = self
     }
     
     private func setupHandleView() {
@@ -121,8 +127,32 @@ final class BottomSheetViewController: UIViewController {
     }
 }
 
+extension BottomSheetViewController: CameraButtonsStackViewDelegate {
+    func cameraButtonsStackViewDelegateDidTapVideoButton() {
+        
+    }
+    
+    func cameraButtonsStackViewDelegateDidTapMicrophoneButton() {
+        
+    }
+    
+    func cameraButtonsStackViewDelegateDidTapFlipCameraButton() {
+        
+    }
+    
+    func cameraButtonsStackViewDelegateDidTapExitButton() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    
+    
+    
+}
+
 extension BottomSheetViewController {
     
     static let maxHeight: CGFloat = (UIScreen.main.bounds.height / 5) * 4
     static let cornerRadius: CGFloat = 12
 }
+
+

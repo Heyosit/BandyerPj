@@ -8,7 +8,16 @@
 
 import UIKit
 
+protocol CameraButtonsStackViewDelegate: class {
+    func cameraButtonsStackViewDelegateDidTapVideoButton()
+    func cameraButtonsStackViewDelegateDidTapMicrophoneButton()
+    func cameraButtonsStackViewDelegateDidTapFlipCameraButton()
+    func cameraButtonsStackViewDelegateDidTapExitButton()
+}
+
 final class CameraButtonsStackView: UIStackView {
+    
+    //MARK: UI
     
     private lazy var videoButton: RoundIconButton = {
         let button = RoundIconButton(type: RoundIconButton.ButtonType.video)
@@ -34,12 +43,17 @@ final class CameraButtonsStackView: UIStackView {
         return button
     }()
     
+    //MARK: Properties
+    
+    weak var delegate: CameraButtonsStackViewDelegate?
+    
     //MARK: Initalization
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupLayout()
         setupProperties()
+        setupTarget()
     }
     
     required init(coder: NSCoder) {
@@ -57,8 +71,30 @@ final class CameraButtonsStackView: UIStackView {
     private func setupProperties() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.axis = .horizontal
-//        self.spacing = ExclamationMarkStackView.stackViewSpacing
         self.distribution = .equalSpacing
+    }
+    
+    private func setupTarget() {
+        videoButton.addTarget(self, action: #selector(videoButtonTapped), for: .touchUpInside)
+        microphoneButton.addTarget(self, action: #selector(microphoneButtonTapped), for: .touchUpInside)
+        flipCameraButton.addTarget(self, action: #selector(flipCameraButtonTapped), for: .touchUpInside)
+        exitButton.addTarget(self, action: #selector(exitButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func videoButtonTapped() {
+        delegate?.cameraButtonsStackViewDelegateDidTapVideoButton()
+    }
+    
+    @objc private func microphoneButtonTapped() {
+        delegate?.cameraButtonsStackViewDelegateDidTapMicrophoneButton()
+    }
+    
+    @objc private func flipCameraButtonTapped() {
+        delegate?.cameraButtonsStackViewDelegateDidTapFlipCameraButton()
+    }
+    
+    @objc private func exitButtonTapped() {
+        delegate?.cameraButtonsStackViewDelegateDidTapExitButton()
     }
     
     

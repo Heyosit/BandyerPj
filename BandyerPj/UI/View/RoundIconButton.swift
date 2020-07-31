@@ -47,12 +47,8 @@ final class RoundIconButton: UIButton {
     private func setupButtonStyle() {
         self.backgroundColor = type.backgroundColor
         if let image = UIImage(named: type.iconName(isActive: true)) {
-            self.setImage(image.withRenderingMode(.alwaysOriginal), for: .normal)
+            self.setImage(image.withRenderingMode(.automatic), for: .normal)
         }
-    }
-    
-    func config(type: ButtonType, isActive: Bool) {
-        
     }
     
 }
@@ -78,13 +74,13 @@ extension RoundIconButton {
         func iconName(isActive: Bool = false) -> String {
             switch self {
             case .video:
-                return isActive ? "camera_icon_active" : "camera_icon_not_active"
+                return isActive ? "􀍊" : "􀍎"
             case .microphone:
-                return isActive ? "microphone_icon_active" : "microphone_icon_not_active"
+                return isActive ? "􀊱" : "􀊳"
             case .flipCamera:
-                return isActive ? "flip_camera_icon_active" : "flip_camera_icon_not_active"
+                return "􀌣"
             case .exit:
-                return "exit_icon"
+                return "􀆄"
                 
             }
         }
