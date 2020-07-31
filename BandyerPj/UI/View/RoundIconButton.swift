@@ -10,6 +10,14 @@ import UIKit
 
 final class RoundIconButton: UIButton {
     
+    private var type: ButtonType = .video
+    
+    convenience init(type: ButtonType) {
+        self.init()
+        self.type = type
+        setupButtonStyle()
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpLayout()
@@ -23,23 +31,28 @@ final class RoundIconButton: UIButton {
     private func setUpLayout() {
         
         NSLayoutConstraint.activate([
-            heightAnchor.constraint(equalToConstant: 30),
-            widthAnchor.constraint(equalToConstant: 30),
+            heightAnchor.constraint(equalToConstant: 70),
+            widthAnchor.constraint(equalToConstant: 70),
             
         ])
     }
     
     private func setupProperties() {
         //        backImageView.image = UIImage(named: "exit")
-        self.layer.cornerRadius = 15
+        self.layer.cornerRadius = 35
         self.layer.masksToBounds = true
+        
     }
     
-    private func config(type: ButtonType, isActive: Bool) {
+    private func setupButtonStyle() {
         self.backgroundColor = type.backgroundColor
         if let image = UIImage(named: type.iconName(isActive: true)) {
             self.setImage(image.withRenderingMode(.alwaysOriginal), for: .normal)
         }
+    }
+    
+    func config(type: ButtonType, isActive: Bool) {
+        
     }
     
 }
@@ -56,7 +69,7 @@ extension RoundIconButton {
             case .video,
                  .microphone,
                  .flipCamera:
-                return UIColor.gray
+                return UIColor.darkGray
             case .exit:
                 return UIColor.red
             }

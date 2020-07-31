@@ -17,6 +17,12 @@ final class BottomSheetViewController: UIViewController {
         return view
     }()
     
+    private lazy var cameraButtonsStackView: CameraButtonsStackView = {
+        let stackView = CameraButtonsStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
     var minHeight: CGFloat {
         return UIScreen.main.bounds.height - (30 + UIApplication.shared.statusBarFrame.height)
     }
@@ -30,12 +36,19 @@ final class BottomSheetViewController: UIViewController {
     
     private func setupLayout() {
         view.addSubview(handleView)
+        view.addSubview(cameraButtonsStackView)
         
         NSLayoutConstraint.activate([
            handleView.heightAnchor.constraint(equalToConstant: 5),
            handleView.widthAnchor.constraint(equalToConstant: 40),
            handleView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
            handleView.topAnchor.constraint(equalTo: view.topAnchor, constant: 5),
+           
+           cameraButtonsStackView.topAnchor.constraint(equalTo: handleView.bottomAnchor, constant: 35),
+           cameraButtonsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+           view.trailingAnchor.constraint(equalTo: cameraButtonsStackView.trailingAnchor, constant: 30),
+           
+           
         ])
     }
     

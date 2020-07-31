@@ -11,25 +11,25 @@ import UIKit
 final class CameraButtonsStackView: UIStackView {
     
     private lazy var videoButton: RoundIconButton = {
-        let button = RoundIconButton()
+        let button = RoundIconButton(type: RoundIconButton.ButtonType.video)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     private lazy var microphoneButton: RoundIconButton = {
-        let button = RoundIconButton()
+        let button = RoundIconButton(type: RoundIconButton.ButtonType.microphone)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     private lazy var flipCameraButton: RoundIconButton = {
-        let button = RoundIconButton()
+        let button = RoundIconButton(type: RoundIconButton.ButtonType.flipCamera)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     private lazy var exitButton: RoundIconButton = {
-        let button = RoundIconButton()
+        let button = RoundIconButton(type: RoundIconButton.ButtonType.exit)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -52,11 +52,6 @@ final class CameraButtonsStackView: UIStackView {
         addArrangedSubview(microphoneButton)
         addArrangedSubview(flipCameraButton)
         addArrangedSubview(exitButton)
-                
-//        NSLayoutConstraint.activate([
-//            backImageView.heightAnchor.constraint(equalToConstant: 48),
-//            backImageView.widthAnchor.constraint(equalToConstant: 32),
-//        ])
     }
     
     private func setupProperties() {
@@ -65,6 +60,7 @@ final class CameraButtonsStackView: UIStackView {
 //        self.spacing = ExclamationMarkStackView.stackViewSpacing
         self.distribution = .equalSpacing
     }
+    
     
     
 }
