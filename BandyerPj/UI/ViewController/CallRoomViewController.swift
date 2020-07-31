@@ -127,6 +127,7 @@ final class CallRoomViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        addGesture()
     }
     
     private func setup() {
@@ -242,6 +243,15 @@ final class CallRoomViewController: UIViewController {
             microphoneAuthStatus = .notAuthorized
             microphoneStatus = .off
         }
+    }
+    
+    private func addGesture() {
+        let gesture = UITapGestureRecognizer.init(target: self, action: #selector(tapGesture))
+        view.addGestureRecognizer(gesture)
+    }
+    
+    @objc private func tapGesture(recognizer: UITapGestureRecognizer) {
+        bottomSheetVC.showViewController()
     }
     
     // MARK: ViewWillAppear
