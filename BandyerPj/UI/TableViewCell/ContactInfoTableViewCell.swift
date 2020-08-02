@@ -16,7 +16,7 @@ final class ContactInfoTableViewCell: UITableViewCell {
         containerView.backgroundColor = UIColor.clear
         return containerView
     }()
-        
+    
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -39,7 +39,7 @@ final class ContactInfoTableViewCell: UITableViewCell {
     }()
     
     static var reuseIdentifier: String {
-      return String(describing: self)
+        return String(describing: self)
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -69,7 +69,7 @@ final class ContactInfoTableViewCell: UITableViewCell {
             telephoneLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: ContactInfoTableViewCell.leadingLabelSpacing),
             telephoneLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             containerView.bottomAnchor.constraint(equalTo: telephoneLabel.bottomAnchor, constant: ContactInfoTableViewCell.topBottomLabelSpacing),
-
+            
         ])
     }
     

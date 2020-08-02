@@ -10,7 +10,7 @@ import UIKit
 
 final class BlurView: UIView {
     
-     // MARK: - UI
+    // MARK: - UI
     
     private lazy var blurVisualEffectView: UIVisualEffectView = {
         let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
@@ -20,7 +20,7 @@ final class BlurView: UIView {
     }()
     
     private lazy var descriptionLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 0
         label.lineBreakMode = .byTruncatingTail

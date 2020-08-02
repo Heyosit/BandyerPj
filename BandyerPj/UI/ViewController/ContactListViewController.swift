@@ -9,8 +9,8 @@
 import UIKit
 
 final class ContactListViewController: UIViewController {
-
-// MARK: UI
+    
+    // MARK: UI
     
     private var contactListTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
@@ -21,7 +21,7 @@ final class ContactListViewController: UIViewController {
         return tableView
     }()
     
-// MARK: Data
+    // MARK: Data
     
     var contactListMock: [Contact] = [
         Contact(name: "Alessio", number: "333292932"),
@@ -34,7 +34,7 @@ final class ContactListViewController: UIViewController {
         Contact(name: "Paolo", number: "7456456")
     ]
     
-// MARK: Setup
+    // MARK: Setup
     
     override func loadView() {
         super.loadView()
@@ -51,7 +51,7 @@ final class ContactListViewController: UIViewController {
         super.viewDidLoad()
         setup()
     }
-
+    
     private func setup() {
         setupTableView()
     }
@@ -61,7 +61,7 @@ final class ContactListViewController: UIViewController {
         contactListTableView.dataSource = self
         contactListTableView.register(ContactInfoTableViewCell.self, forCellReuseIdentifier: ContactInfoTableViewCell.reuseIdentifier)
     }
-
+    
 }
 
 // MARK: - UITableViewDelegate, UITableViewDataSource

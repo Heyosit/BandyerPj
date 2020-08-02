@@ -38,7 +38,7 @@ final class CallRoomViewController: UIViewController {
     
     private let bottomSheetVC = BottomSheetViewController()
     
-    // MARK: Data
+    // MARK: Enum
     
     private enum CameraAuthorizationStatus {
         case authorized
@@ -54,11 +54,21 @@ final class CallRoomViewController: UIViewController {
                 return false
             }
         }
+        
+        var isNotAuthorized: Bool {
+            switch self {
+            case .notAuthorized:
+                return true
+            default:
+                return false
+            }
+        }
     }
     
     private enum MicrophoneAuthStatus {
         case authorized
         case notAuthorized
+        case notFound
     }
     
     private enum FlipCameraStatus {
@@ -79,9 +89,18 @@ final class CallRoomViewController: UIViewController {
     private enum DescriptionText: String {
         case cameraDisabledByUser = "Camera has been disabled by the user"
         case noCameraAvailable = "No cameras available"
-        case notAuthorized = "Use of camera not authorized"
+        case notAuthorized = "Camera not authorized"
         case failed = "Something went wrong"
+        case sessionRunOut = "Session run out"
+        case sessionError = "Session error"
+        case thermalStateCritical = "Device thermal state is too high"
+        case usedByAnotherClient = "Camera is used by another client"
+        case systemPressure = "Session stopped running due to shutdown system pressure level"
+        case multipleForegroundApps = "Camere non available with multiple foreground apps"
+        case appInBackground = "Camera not available in background"
     }
+    
+    //MARK: - Properties
     
     weak var delegate: CallRoomViewControllerDelegate?
     
@@ -95,7 +114,7 @@ final class CallRoomViewController: UIViewController {
     
     private var frontVideoDeviceInput: AVCaptureDeviceInput?
     private var backVideoDeviceInput: AVCaptureDeviceInput?
-    private var currentVideoDeviceInput: AVCaptureDeviceInput?
+    @objc dynamic var currentVideoDeviceInput: AVCaptureDeviceInput?
     
     private var currentAudioDeviceInput: AVCaptureDeviceInput?
     
@@ -104,6 +123,9 @@ final class CallRoomViewController: UIViewController {
     private var microphoneStatus: MicrophoneStatus = .off { didSet { didUpdateMicrophoneStatus() } }
     private var cameraStatus: CameraStatus = .off { didSet { didUpdateCameraStatus() } }
     
+    private var cameraDisabledDescription = DescriptionText.notAuthorized
+    
+    private var keyValueObservations = [NSKeyValueObservation]()
     
     // MARK: LoadView
     
@@ -223,6 +245,7 @@ final class CallRoomViewController: UIViewController {
         
         guard cameraAuthStatus.isGranted else {
             cameraStatus = .off
+            cameraDisabledDescription = .notAuthorized
             canFlipCamera = .off
             return
         }
@@ -244,6 +267,7 @@ final class CallRoomViewController: UIViewController {
         else {
             cameraAuthStatus = .notFound
             cameraStatus = .off
+            cameraDisabledDescription = .noCameraAvailable
             return
         }
         
@@ -251,8 +275,14 @@ final class CallRoomViewController: UIViewController {
     
     private func setupAudioDevices() {
         do {
-            let audioDevice = AVCaptureDevice.default(for: .audio)
-            let audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice!)
+            
+            guard let audioDevice = AVCaptureDevice.default(for: .audio) else {
+                microphoneAuthStatus = .notFound
+                microphoneStatus = .off
+                return
+            }
+            
+            let audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice)
             
             if session.canAddInput(audioDeviceInput) {
                 session.addInput(audioDeviceInput)
@@ -285,6 +315,7 @@ final class CallRoomViewController: UIViewController {
         super.viewWillAppear(animated)
         
         captureSessionQueue.async {
+            self.addObservers()
             self.session.startRunning()
         }
     }
@@ -295,6 +326,7 @@ final class CallRoomViewController: UIViewController {
         captureSessionQueue.async {
             if self.cameraAuthStatus.isGranted {
                 self.session.stopRunning()
+                self.removeObservers()
             }
         }
         super.viewWillDisappear(animated)
@@ -354,34 +386,128 @@ final class CallRoomViewController: UIViewController {
     }
     
     private func didUpdateCameraStatus() {
-        switch cameraStatus {
-        case .on:
-            delegate?.callRoomViewControllerDelegateSwitchButton(.video, shouldActivate: true)
-        case .off:
-            delegate?.callRoomViewControllerDelegateSwitchButton(.video, shouldActivate: false)
+        DispatchQueue.main.async {
+            switch self.cameraStatus {
+            case .on:
+                self.blurView.isHidden = true
+                self.delegate?.callRoomViewControllerDelegateSwitchButton(.video, shouldActivate: true)
+            case .off:
+                self.blurView.isHidden = false
+                self.blurView.descriptionText = self.cameraDisabledDescription.rawValue
+                self.delegate?.callRoomViewControllerDelegateSwitchButton(.video, shouldActivate: false)
+            }
         }
     }
     
+    //MARK: Observers
     
+    private func addObservers() {
+        let sessionRunningObservation = session.observe(\.isRunning, options: .new) { _, change in
+            guard let isSessionRunning = change.newValue else { return }
+            self.cameraStatus = isSessionRunning && self.cameraAuthStatus.isGranted ? .on : .off
+            self.cameraDisabledDescription = self.cameraAuthStatus.isNotAuthorized ? .notAuthorized : .sessionRunOut
+            
+        }
+        keyValueObservations.append(sessionRunningObservation)
+        
+        if #available(iOS 11.0, *) {
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(self.checkThermalState),
+                                                   name: ProcessInfo.thermalStateDidChangeNotification,
+                                                   object: nil
+            )
+        }
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(sessionRuntimeError),
+                                               name: .AVCaptureSessionRuntimeError,
+                                               object: session)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(sessionWasInterrupted),
+                                               name: .AVCaptureSessionWasInterrupted,
+                                               object: session)
+        
+        NotificationCenter.default.addObserver(self,
+        selector: #selector(sessionInterruptionEnded),
+        name: .AVCaptureSessionInterruptionEnded,
+        object: session)
+        
+        
+    }
+    
+    @available(iOS 11.0, *)
+    @objc func checkThermalState(notification: NSNotification) {
+        let state = ProcessInfo.processInfo.thermalState
+        switch state {
+        case .serious, .critical:
+            cameraStatus = .off
+            cameraDisabledDescription = .thermalStateCritical
+        case .fair, .nominal:
+            cameraStatus = cameraAuthStatus.isGranted ? .on : .off
+        @unknown default:
+            break
+        }
+    }
+    
+    @objc func sessionRuntimeError(notification: NSNotification) {
+        guard let error = notification.userInfo?[AVCaptureSessionErrorKey] as? AVError else { return }
+        
+        print("Capture session runtime error: \(error)")
+        if error.code == .mediaServicesWereReset {
+            cameraStatus = .off
+            cameraDisabledDescription = .sessionError
+        }
+    }
+    
+    @objc func sessionWasInterrupted(notification: NSNotification) {
+        if let userInfoValue = notification.userInfo?[AVCaptureSessionInterruptionReasonKey] as AnyObject?,
+            let reasonIntegerValue = userInfoValue.integerValue,
+            let reason = AVCaptureSession.InterruptionReason(rawValue: reasonIntegerValue) {
+            print("Capture session was interrupted with reason \(reason)")
+            
+            if #available(iOS 11.1, *) {
+                if reason == .videoDeviceNotAvailableDueToSystemPressure {
+                    cameraDisabledDescription = .systemPressure
+                }
+            } else if reason == .audioDeviceInUseByAnotherClient || reason == .videoDeviceInUseByAnotherClient {
+                cameraDisabledDescription = .usedByAnotherClient
+            } else if reason == .videoDeviceNotAvailableWithMultipleForegroundApps {
+                cameraDisabledDescription = .multipleForegroundApps
+            } else if reason == .videoDeviceNotAvailableInBackground {
+                cameraDisabledDescription = .appInBackground
+            }
+            cameraStatus = .off
+        }
+    }
+    
+    @objc func sessionInterruptionEnded(notification: NSNotification) {
+        print("Capture session interruption ended")
+        
+        cameraStatus = cameraAuthStatus.isGranted ? .on : .off
+    }
+
+    
+    private func removeObservers() {
+        NotificationCenter.default.removeObserver(self)
+        
+        for keyValueObservation in keyValueObservations {
+            keyValueObservation.invalidate()
+        }
+        keyValueObservations.removeAll()
+    }
 }
 
 extension CallRoomViewController: CameraButtonsStackViewDelegate {
     
     func cameraButtonsStackViewDelegateDidTapVideoButton() {
-        if cameraStatus == .on {
-            cameraStatus = .off
-            self.blurView.isHidden = false
-            self.blurView.descriptionText = DescriptionText.cameraDisabledByUser.rawValue
-        }
-        else {
-            cameraStatus = .on
-            self.blurView.isHidden = true
-        }
+        cameraDisabledDescription = .cameraDisabledByUser
+        cameraStatus = cameraStatus == .on ? .off : .on
     }
     
     func cameraButtonsStackViewDelegateDidTapMicrophoneButton() {
         guard let currentAudioDeviceInput = currentAudioDeviceInput else {
-            microphoneAuthStatus = .notAuthorized
+            microphoneAuthStatus = .notFound
             return
         }
         session.beginConfiguration()

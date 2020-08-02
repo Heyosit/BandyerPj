@@ -13,9 +13,9 @@ extension UIView {
     func anchor(to view: UIView, constant: CGFloat = 0) {
         NSLayoutConstraint.activate([
             topAnchor.constraint(equalTo: view.topAnchor, constant: constant),
-            bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: constant),
-            view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: constant),
+            leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: constant),
             view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: constant),
+            view.bottomAnchor.constraint(equalTo: bottomAnchor, constant: constant),
         ])
     }
 }

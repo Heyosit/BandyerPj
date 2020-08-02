@@ -31,7 +31,4 @@ final class CameraPreviewLayerView: UIView {
             videoPreviewLayer.session = newValue
         }
     }
-    
-    
-    
 }
